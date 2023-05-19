@@ -32,6 +32,69 @@ const Employees = ({ data }) => {
   useEffect(() => {
     setFilteredData(data);
   }, [data]);
+
+  const [designation, setDesignation] = React.useState("");
+  const [skills, setSkills] = React.useState("");
+
+  const handleDesignationFilter = (e) => {
+    if (designation == "Clear") {
+      setFilteredData(data);
+      return;
+    } else {
+      let tempData = data.filter((item) => {
+        return item.designation;
+      });
+      console.log(tempData);
+      let temp = tempData.filter((item) => {
+        console.log(item.designation, designation);
+        return item.designation
+          .toLowerCase()
+          .includes(designation.toLowerCase());
+      });
+      setFilteredData(temp);
+    }
+  };
+
+  const handleSkillsFilter = (e) => {
+    // skills is an array of strings
+
+    let tempData = data.filter((item) => {
+      return item.skills;
+    });
+    console.log(tempData);
+    let temp = tempData.filter((item) => {
+      console.log(item.skills, skills);
+      return item.skills.includes(skills);
+    });
+    setFilteredData(temp);
+  };
+
+  const [dataDesignations, setDataDesignations] = React.useState([]);
+  const [dataSkills, setDataSkills] = React.useState(["Python", "Java"]);
+
+  useEffect(() => {
+    let tempData = data.filter((item) => {
+      return item.designation;
+    });
+    let temp = tempData.map((item) => {
+      return item.designation;
+    });
+    setDataDesignations([...new Set(temp)]);
+  }, [data]);
+
+  // filter skills
+
+  useEffect(() => {
+    var temp = [];
+    data.map((item) => {
+      console.log(item.skills);
+      if (item.skills && item.skills != "undefined") {
+        temp.push(...item.skills);
+      }
+    });
+    setDataSkills([...new Set(temp)]);
+  }, [data]);
+
   return (
     <div>
       <Navbar />
@@ -55,8 +118,61 @@ const Employees = ({ data }) => {
           >
             Clear
           </div>
+          {/* Two dropsdowns of all skills and designations */}
         </div>
-        <div className="flex flex-row gap-4 flex-wrap justify-center">
+        <div className="flex flex-row justify-evenly">
+          <div className="relative flex flex-row gap-x-3">
+            <select
+              className="border-2 border-gray-300 rounded-xl px-5 py-2 w-[70%]"
+              onChange={(e) => setDesignation(e.target.value)}
+            >
+              {dataDesignations.map((item, idx) => {
+                return <option key={idx}>{item}</option>;
+              })}
+              {/* <option>Clear</option>   */}
+            </select>
+            <div
+              className="px-2 bg-blue-100 flex flex-row items-center justify-center rounded-xl cursor-pointer"
+              onClick={handleDesignationFilter}
+            >
+              Filter
+            </div>
+            <div
+              className="px-2 bg-blue-100 flex flex-row items-center justify-center rounded-xl cursor-pointer"
+              onClick={() => {
+                setFilteredData(data);
+              }}
+            >
+              Clear
+            </div>
+          </div>
+          <div className="relative flex flex-row gap-x-4">
+            <select
+              className="border-2 border-gray-300 rounded-xl px-5 py-2 w-[70%]"
+              onChange={(e) => setSkills(e.target.value)}
+            >
+              {dataSkills.map((item, idx) => {
+                return <option key={idx}>{item}</option>;
+              })}
+              {/* <option>Clear</option>   */}
+            </select>
+            <div
+              className="px-2 bg-blue-100 flex flex-row items-center justify-center rounded-xl cursor-pointer"
+              onClick={handleSkillsFilter}
+            >
+              Filter
+            </div>
+            <div
+              className="px-2 bg-blue-100 flex flex-row items-center justify-center rounded-xl cursor-pointer"
+              onClick={() => {
+                setFilteredData(data);
+              }}
+            >
+              Clear
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-row gap-4 flex-wrap justify-center mt-5">
           {data &&
             filteredData.map((item, idx) => {
               return (
