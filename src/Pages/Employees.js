@@ -8,7 +8,7 @@ const Employees = ({ data }) => {
   const [search, setSearch] = React.useState("");
   const skillsOptions = [
     { value: "SQL", label: "SQL" },
-    { value: "Javascript", label: "Javascript" },
+    { value: "JavaScript", label: "JavaScript" },
     { value: "Python", label: "Python" },
     { value: "HTML", label: "HTML" },
     { value: "CSS", label: "CSS" },
@@ -39,6 +39,7 @@ const Employees = ({ data }) => {
   };
 
   const clearSearch = () => {
+    setSearch("");
     setFilteredData(data);
   };
 
@@ -110,7 +111,7 @@ const Employees = ({ data }) => {
   // console.log(selectedSkills);
 
   useEffect(() => {
-    if (selectedSkills.length > 0) {
+    if (selectedSkills.length > 0 && !search) {
       console.log(selectedSkills);
       var tempData = data.filter((item) => {
         return item.skills;
@@ -118,12 +119,33 @@ const Employees = ({ data }) => {
       var skills = selectedSkills.map((item) => {
         return item.value;
       });
-      // filter people with all skills in skills array
       var temp = tempData.filter((item) => {
         console.log(item.skills, skills);
-        return skills.every((skill) => item.skills.includes(skill));
+        return skills.some((skill) => item.skills.includes(skill));
       });
       setFilteredData(temp);
+    } else if (selectedSkills.length > 0 && search) {
+      console.log(selectedSkills);
+      var tempData = data.filter((item) => {
+        return item.skills && item.name;
+      });
+      var skills = selectedSkills.map((item) => {
+        return item.value;
+      });
+      var temp = tempData.filter((item) => {
+        // console.log(item.skills, skills);
+        return skills.some((skill) => item.skills.includes(skill));
+      });
+      console.log(temp);
+      if (temp.length > 0) {
+        var temp2 = temp.filter((item) => {
+          console.log(item.name, search);
+          return item.name.toLowerCase().includes(search.toLowerCase());
+        });
+        setFilteredData(temp2);
+      } else {
+        setFilteredData([]);
+      }
     } else {
       setFilteredData(data);
     }
@@ -137,6 +159,7 @@ const Employees = ({ data }) => {
           <input
             className="border-2 border-gray-300 rounded-xl px-5 py-2 w-[70%]"
             placeholder="Search by Name"
+            value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           <div
