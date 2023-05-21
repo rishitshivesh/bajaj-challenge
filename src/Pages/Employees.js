@@ -1,10 +1,23 @@
 import React, { useEffect } from "react";
 import Navbar from "../Components/Navbar/Navbar";
 import { FaUserCircle } from "react-icons/fa";
+import Select from "react-select";
+
 const Employees = ({ data }) => {
   console.log(data);
   const [search, setSearch] = React.useState("");
+  const skillsOptions = [
+    { value: "SQL", label: "SQL" },
+    { value: "Javascript", label: "Javascript" },
+    { value: "Python", label: "Python" },
+    { value: "HTML", label: "HTML" },
+    { value: "CSS", label: "CSS" },
+    { value: "Photoshop", label: "Photoshop" },
+    { value: "Manual Testing", label: "Manual Testing" },
+    { value: "Java", label: "Java" },
+  ];
 
+  const [selectedSkills, setSelectedSkills] = React.useState([]);
   const searchFunction = (name) => {
     let tempData = data.filter((item) => {
       return item.name;
@@ -94,7 +107,27 @@ const Employees = ({ data }) => {
     });
     setDataSkills([...new Set(temp)]);
   }, [data]);
+  // console.log(selectedSkills);
 
+  useEffect(() => {
+    if (selectedSkills.length > 0) {
+      console.log(selectedSkills);
+      var tempData = data.filter((item) => {
+        return item.skills;
+      });
+      var skills = selectedSkills.map((item) => {
+        return item.value;
+      });
+      // filter people with all skills in skills array
+      var temp = tempData.filter((item) => {
+        console.log(item.skills, skills);
+        return skills.every((skill) => item.skills.includes(skill));
+      });
+      setFilteredData(temp);
+    } else {
+      setFilteredData(data);
+    }
+  }, [selectedSkills]);
   return (
     <div>
       <Navbar />
@@ -146,7 +179,7 @@ const Employees = ({ data }) => {
               Clear
             </div>
           </div>
-          <div className="relative flex flex-row gap-x-4">
+          {/* <div className="relative flex flex-row gap-x-4">
             <select
               className="border-2 border-gray-300 rounded-xl px-5 py-2 w-[70%]"
               onChange={(e) => setSkills(e.target.value)}
@@ -154,7 +187,6 @@ const Employees = ({ data }) => {
               {dataSkills.map((item, idx) => {
                 return <option key={idx}>{item}</option>;
               })}
-              {/* <option>Clear</option>   */}
             </select>
             <div
               className="px-2 bg-blue-100 flex flex-row items-center justify-center rounded-xl cursor-pointer"
@@ -170,7 +202,17 @@ const Employees = ({ data }) => {
             >
               Clear
             </div>
-          </div>
+          </div> */}
+          <Select
+            isMulti
+            name="skills"
+            placeholder="Select Skills"
+            options={skillsOptions}
+            className="w-[40vw]"
+            onChange={(e) => {
+              setSelectedSkills(e);
+            }}
+          />
         </div>
         <div className="flex flex-row gap-4 flex-wrap justify-center mt-5">
           {data &&
@@ -184,6 +226,7 @@ const Employees = ({ data }) => {
                     <div className="font-bold text-2xl">{item?.name}</div>
                     <div>Emp. {item?.id}</div>
                     <div>{item?.designation}</div>
+                    <div>{item?.skills?.join(", ")}</div>
                   </div>
                 </a>
               );
