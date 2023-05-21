@@ -70,8 +70,6 @@ const Employees = ({ data }) => {
   };
 
   const handleSkillsFilter = (e) => {
-    // skills is an array of strings
-
     let tempData = data.filter((item) => {
       return item.skills;
     });
@@ -119,7 +117,7 @@ const Employees = ({ data }) => {
         return item.value;
       });
       var temp = tempData.filter((item) => {
-        console.log(item.skills, skills);
+        // console.log(item.skills, skills);
         return skills.some((skill) => item.skills.includes(skill));
       });
       setFilteredData(temp);
@@ -132,7 +130,6 @@ const Employees = ({ data }) => {
         return item.value;
       });
       var temp = tempData.filter((item) => {
-        // console.log(item.skills, skills);
         return skills.some((skill) => item.skills.includes(skill));
       });
       console.log(temp);
@@ -224,10 +221,20 @@ const Employees = ({ data }) => {
                     <div className="text-3xl">
                       <FaUserCircle />
                     </div>
-                    <div className="font-bold text-2xl">{item?.name}</div>
+                    <div className="font-bold text-2xl">
+                      {item.name ? item.name : "Unnamed"}
+                    </div>
                     <div>Emp. {item?.id}</div>
-                    <div>{item?.designation}</div>
-                    <div>{item?.skills?.join(", ")}</div>
+                    <div>
+                      {item.designation
+                        ? item.designation
+                        : "Designation Undefined"}
+                    </div>
+                    <div>
+                      {item.skills.length > 0
+                        ? item.skills.join(", ")
+                        : "Skills Undefined"}
+                    </div>
                   </div>
                 </a>
               );
