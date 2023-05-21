@@ -34,9 +34,9 @@ const Employees = ({ data }) => {
 
   const [filteredData, setFilteredData] = React.useState(data);
 
-  const handleSearch = (e) => {
-    setFilteredData(searchFunction(search));
-  };
+  // const handleSearch = (e) => {
+  //   // setFilteredData(searchFunction(search));
+  // };
 
   const clearSearch = () => {
     setSearch("");
@@ -145,10 +145,12 @@ const Employees = ({ data }) => {
       } else {
         setFilteredData([]);
       }
+    } else if (search) {
+      setFilteredData(searchFunction(search));
     } else {
       setFilteredData(data);
     }
-  }, [selectedSkills]);
+  }, [selectedSkills, search]);
   return (
     <div>
       <Navbar />
@@ -161,12 +163,12 @@ const Employees = ({ data }) => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <div
+          {/* <div
             className="px-2 bg-blue-100 flex flex-row items-center justify-center rounded-xl cursor-pointer"
             onClick={handleSearch}
           >
             Search
-          </div>
+          </div> */}
           <div
             className="px-2 bg-blue-100 flex flex-row items-center justify-center rounded-xl cursor-pointer"
             onClick={clearSearch}
@@ -201,30 +203,7 @@ const Employees = ({ data }) => {
               Clear
             </div>
           </div>
-          {/* <div className="relative flex flex-row gap-x-4">
-            <select
-              className="border-2 border-gray-300 rounded-xl px-5 py-2 w-[70%]"
-              onChange={(e) => setSkills(e.target.value)}
-            >
-              {dataSkills.map((item, idx) => {
-                return <option key={idx}>{item}</option>;
-              })}
-            </select>
-            <div
-              className="px-2 bg-blue-100 flex flex-row items-center justify-center rounded-xl cursor-pointer"
-              onClick={handleSkillsFilter}
-            >
-              Filter
-            </div>
-            <div
-              className="px-2 bg-blue-100 flex flex-row items-center justify-center rounded-xl cursor-pointer"
-              onClick={() => {
-                setFilteredData(data);
-              }}
-            >
-              Clear
-            </div>
-          </div> */}
+
           <Select
             isMulti
             name="skills"
