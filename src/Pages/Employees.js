@@ -108,7 +108,6 @@ const Employees = ({ data }) => {
     });
     setDataSkills([...new Set(temp)]);
   }, [data]);
-  // console.log(selectedSkills);
 
   useEffect(() => {
     if (selectedSkills.length > 0 && !search) {
